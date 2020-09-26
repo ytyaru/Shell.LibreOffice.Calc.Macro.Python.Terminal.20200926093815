@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+import uno
+import unohelper
+from pythonscript import ScriptContext
+from com.sun.star.awt.MessageBoxType import MESSAGEBOX
+
+def connect_script_context(host='localhost', port='2002', namedpipe=None):
+    UNO_RESOLVER = "com.sun.star.bridge.UnoUrlResolver"
+    UNO_DESKTOP = "com.sun.star.frame.Desktop"
+    localCtx = uno.getComponentContext()
+    localSmgr = localCtx.ServiceManager
+    resolver = localSmgr.createInstanceWithContext(UNO_RESOLVER, localCtx)
+    if namedpipe is None:
+        uno_string = 'uno:socket,host=%s,port=%s;urp;StarOffice.ComponentContext' % (host, port)
+    else:
+        uno_string = 'uno:pipe,name=%s;urp;StarOffice.ComponentContext' % namedpipe
+    ctx = resolver.resolve(uno_string)
+    smgr = ctx.ServiceManager
+    XSCRIPTCONTEXT = ScriptContext(ctx,
+                                   smgr.createInstanceWithContext(UNO_DESKTOP, ctx),
+                                   None)
+    return XSCRIPTCONTEXT
+
+def messagebox(message='', btn_type=1, title='Title', msg_type='messbox'):
+    """shows message."""
+    desktop = XSCRIPTCONTEXT.getDesktop()
+    frame = desktop.getCurrentFrame()
+    window = frame.getContainerWindow()
+    toolkit = window.getToolkit()
+    msgbox = toolkit.createMessageBox(window, MESSAGEBOX, btn_type, title, message)
+    return msgbox.execute()
+
+import os.path
+file = os.path.abspath('/tmp/work/test.ods')
+url  = unohelper.systemPathToFileUrl(file)
+XSCRIPTCONTEXT = connect_script_context(namedpipe='librepipe')
+desktop = XSCRIPTCONTEXT.getDesktop()
+doc = desktop.loadComponentFromURL(url, "_blank", 0, ())
+sheet = doc.getSheets().getByIndex(0)
+sheet.getCellByPosition(0,0).Value = 999
+doc.store()
+#doc.storeAsURL(file, ())
+#doc.storeAsURL('/tmp/work/test2.ods', ())
+#print(dir(doc))
+#if doc.hasLocation and not doc.isReadonly: doc.store()
+#else: doc.storeAsURL(file, ())
+#else: doc.storeAsURL('/tmp/work/test2.ods', ())
+#messagebox(sheet.getCellByPosition(0,0).Value)
+
+'''
+# $ soffice --calc --headless "--accept=pipe,name=librepipe;urp;"
+XSCRIPTCONTEXT = connect_script_context(namedpipe='librepipe')
+doc = XSCRIPTCONTEXT.getDocument()
+sheet = doc.getSheets().getByName('Sheet1')
+cell = sheet.getCellRangeByName('A1')
+cell.String = 'Hello'
+
+#XSCRIPTCONTEXT = connect_script_context(namedpipe='librepipe')
+#doc = XSCRIPTCONTEXT.getDocument()
+#print(dir(doc))
+#sheet = doc.getSheets().getByName('Sheet1')
+#A1 = sheet.getCellRangeByName('A1')
+#A1.Value = 100
+'''
