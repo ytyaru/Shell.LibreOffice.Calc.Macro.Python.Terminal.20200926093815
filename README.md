@@ -4,14 +4,6 @@
 
 Execute the LibreOffice-Calc Python macro on the terminal.
 
-# DEMO
-
-![]()
-
-# Features
-
-* sales point
-
 # Requirement
 
 * <time datetime="2020-09-26T09:38:11+0900">2020-09-26</time>
@@ -36,10 +28,6 @@ git clone https://github.com/ytyaru/Shell.LibreOffice.Calc.Macro.Python.Terminal
 cd Shell.LibreOffice.Calc.Macro.Python.Terminal.20200926093815/src
 ./run.sh
 ```
-
-# Note
-
-* important point
 
 # Author
 

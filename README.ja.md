@@ -4,14 +4,6 @@
 
 　LibreOffice-CalcのPythonマクロを端末で実行する。
 
-# デモ
-
-![]()
-
-# 特徴
-
-* セールスポイント
-
 # 開発環境
 
 * <time datetime="2020-09-26T09:38:11+0900">2020-09-26</time>
@@ -36,10 +28,6 @@ git clone https://github.com/ytyaru/Shell.LibreOffice.Calc.Macro.Python.Terminal
 cd Shell.LibreOffice.Calc.Macro.Python.Terminal.20200926093815/src
 ./run.sh
 ```
-
-# 注意
-
-* 注意点など
 
 # 著者
 
